@@ -3,10 +3,10 @@ import {Entity, model, property} from '@loopback/repository';
 @model()
 export class Booking extends Entity {
   @property({
-    type: 'object',
+    type: 'any',
     required: true,
   })
-  bookingResponse: object;
+  bookingResponse?: any;
 
   @property({
     type: 'string',
@@ -14,7 +14,6 @@ export class Booking extends Entity {
     generated: true,
   })
   id?: string;
-
 
   constructor(data?: Partial<Booking>) {
     super(data);

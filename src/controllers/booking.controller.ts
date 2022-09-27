@@ -1,6 +1,7 @@
 import {
   Count,
   CountSchema,
+  DataObject,
   Filter,
   FilterExcludingWhere,
   repository,
@@ -18,20 +19,18 @@ import {
   response,
 } from '@loopback/rest';
 import convert from 'xml-js';
-import {Booking} from '../models';
-import {BookingRepository} from '../repositories';
+import {Booking, Olbv6} from '../models';
+import {BookingRepository, Olbv6Repository} from '../repositories';
 
 export class BookingController {
   constructor(
     @repository(BookingRepository)
     public bookingRepository: BookingRepository,
+    @repository(Olbv6Repository)
+    public olbv6Repository: Olbv6Repository,
   ) {}
 
   @post('/bookings')
-  @response(200, {
-    description: 'Booking model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Booking)}},
-  })
   async create(
     @requestBody({
       content: {
@@ -44,8 +43,21 @@ export class BookingController {
       },
     })
     booking: Omit<Booking, 'id'>,
-  ): Promise<Booking> {
-    return this.bookingRepository.create(booking);
+  ): Promise<Olbv6> {
+    const {bookingResponse} = booking;
+    const {bookingResponseDetails} = bookingResponse;
+    const {orderList} = bookingResponseDetails;
+    const {order} = orderList;
+    return this.olbv6Repository.create({
+      orderList: {
+        currency: order.currency,
+        externalId: bookingResponseDetails.externalId,
+        orderItemList: order.orderItemList,
+        paymentSchedule: order.paymentSchedule,
+        reservationCancellationPolicy: order.reservationCancellationPolicy,
+        stayFees: order.stayFees,
+      },
+    } as DataObject<Olbv6>);
   }
 
   @get('/bookings/count')
