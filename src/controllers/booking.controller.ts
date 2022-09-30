@@ -35,29 +35,94 @@ export class BookingController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Booking, {
+          schema: getModelSchemaRef(Olbv6, {
             title: 'NewBooking',
             exclude: ['id'],
           }),
         },
       },
     })
-    booking: Omit<Booking, 'id'>,
-  ): Promise<Olbv6> {
-    const {bookingResponse} = booking;
-    const {bookingResponseDetails} = bookingResponse;
-    const {orderList} = bookingResponseDetails;
-    const {order} = orderList;
-    return this.olbv6Repository.create({
-      orderList: {
-        currency: order.currency,
-        externalId: bookingResponseDetails.externalId,
-        orderItemList: order.orderItemList,
-        paymentSchedule: order.paymentSchedule,
-        reservationCancellationPolicy: order.reservationCancellationPolicy,
-        stayFees: order.stayFees,
+    olbV6: Omit<Olbv6, 'id'>,
+  ): Promise<Booking> {
+    // const {
+    //   aditionals,
+    //   cleaning,
+    //   client,
+    //   creditcard,
+    //   dates,
+    //   extras,
+    //   linen,
+    //   payment,
+    //   pets,
+    //   rates,
+    //   taxes,
+    //   source,
+    //   insurance,
+    //   property,
+    // } = olbV6;
+
+    const totalAmount = 'calcular';
+    const dueDate = 'extraer';
+
+    return this.bookingRepository.create({
+      bookingResponse: {
+        bookingResponseDetails: {
+          orderList: {
+            order: {
+              currency: 'USD',
+              paymentSchedule: {
+                acceptedPaymentForms: {
+                  paymentCardDescriptor: [
+                    {
+                      paymentFormType: 'CARD',
+                      cardCode: 'VISA',
+                      cardType: 'CREDIT',
+                    },
+                    {
+                      paymentFormType: 'CARD',
+                      cardCode: 'MASTERCARD',
+                      cardType: 'CREDIT',
+                    },
+                    {
+                      paymentFormType: 'CARD',
+                      cardCode: 'DISCOVER',
+                      cardType: 'CREDIT',
+                    },
+                  ],
+                  paymentInvoiceDescriptor: {
+                    paymentFormType: 'INVOICE',
+                    paymentNote: '',
+                  },
+                },
+                paymentScheduleItemList: {
+                  paymentScheduleItem: {
+                    amount: totalAmount,
+                    dueDate,
+                    currency: 'USD',
+                  },
+                },
+              },
+              reservationCancellationPolicy: {
+                description: 'Cancellation poilcy',
+              },
+              orderItemList: {
+                orderItem: [
+                  {
+                    name: 'Rent',
+                    preTaxAmount: 2100,
+                    totalAmount: 2329.95,
+                    feeType: 'RENTAL',
+                    description: 'Rent',
+                    // status: 'ACCEPTED',
+                  },
+                ],
+              },
+            },
+          },
+        },
       },
     } as DataObject<Olbv6>);
+    // Devolver XML
   }
 
   @get('/bookings/count')

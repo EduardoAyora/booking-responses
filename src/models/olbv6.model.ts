@@ -13,7 +13,85 @@ export class Olbv6 extends Entity {
     type: 'object',
     required: true,
   })
-  orderList: object;
+  property: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  client: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  dates: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  rates: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  taxes: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  payment: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  creditcard: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  pets: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  linen: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  cleaning: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  aditionals: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  insurance: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  extras: object;
+
+  @property({
+    type: 'object',
+    required: true,
+  })
+  source: object;
 
   constructor(data?: Partial<Olbv6>) {
     super(data);
